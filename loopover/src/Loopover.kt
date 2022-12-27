@@ -1,8 +1,9 @@
 const val INVALID_COLUMN_INDEX = "Column index for function not valid"
 const val INVALID_ROW_INDEX = "Row index for function not valid"
-const val INVALID_LOOPOVER_SETUP = "Invalid Loopover setup"
+const val LOOPOVER_ALREADY_SOLVED = "Loopover already solved"
+const val INVALID_LOOPOVER_SETUP = "Invalid loopover setup"
 
-class Loopover(private val row: Int, private val column: Int, private val array: Array<CharArray>) : Game {
+class Loopover(val row: Int, val column: Int, val array: Array<CharArray>, private val parent: Loopover?) {
 
     fun loopoverFromFile(fileName: String): Loopover {
         val file = FileReader.readFileAsLinesUsingUseLines(fileName)
@@ -16,7 +17,7 @@ class Loopover(private val row: Int, private val column: Int, private val array:
             }
         }
 
-        return Loopover(rowCount, columnCount, newArray)
+        return Loopover(rowCount, columnCount, newArray, null)
 
     }
 
@@ -50,7 +51,7 @@ class Loopover(private val row: Int, private val column: Int, private val array:
                 newArray[i][j] = letter++
             }
         }
-        return Loopover(row, column, newArray)
+        return Loopover(row, column, newArray, null)
     }
 
     fun moveColumnUp(columnIndex: Int): Loopover {
@@ -64,7 +65,7 @@ class Loopover(private val row: Int, private val column: Int, private val array:
         }
         newArray[row - 1][columnIndex] = temp
         println("columnUp $columnIndex")
-        return Loopover(row, column, newArray)
+        return Loopover(row, column, newArray, null)
     }
 
     fun moveColumnDown(columnIndex: Int): Loopover {
@@ -78,7 +79,7 @@ class Loopover(private val row: Int, private val column: Int, private val array:
         }
         newArray[0][columnIndex] = temp
         println("columnDown $columnIndex")
-        return Loopover(row, column, newArray)
+        return Loopover(row, column, newArray, null)
     }
 
     fun moveRowLeft(rowIndex: Int): Loopover {
@@ -92,7 +93,7 @@ class Loopover(private val row: Int, private val column: Int, private val array:
         }
         newArray[rowIndex][column - 1] = temp
         println("rowLeft $rowIndex")
-        return Loopover(row, column, newArray)
+        return Loopover(row, column, newArray, null)
 
 
     }
@@ -108,12 +109,7 @@ class Loopover(private val row: Int, private val column: Int, private val array:
         }
         newArray[rowIndex][0] = temp
         println("rowRight $rowIndex")
-        return Loopover(row, column, newArray)
-    }
-
-    override fun solve() {
-        //to be implemented
-
+        return Loopover(row, column, newArray, null)
     }
 
     override fun toString(): String {

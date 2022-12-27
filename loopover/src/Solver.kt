@@ -1,0 +1,4 @@
+interface Solver {
+
+    fun solve()
+}

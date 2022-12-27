@@ -1,4 +1,0 @@
-interface Game {
-
-    fun solve()
-}

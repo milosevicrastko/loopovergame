@@ -1,8 +1,6 @@
 fun main() {
-    val loopover = Loopover(0,0, arrayOf())
+    val loopover = Loopover(0,0, arrayOf(), null)
     val loopoverFromFile = loopover.loopoverFromFile("example.txt")
-    print(loopoverFromFile)
-    println()
-    val loopoverMovedLeft = loopoverFromFile.moveRowLeft(2)
-    print(loopoverMovedLeft)
+    val loopoverSolver = LoopoverSolver(loopoverFromFile)
+    loopoverSolver.solve()
 }
