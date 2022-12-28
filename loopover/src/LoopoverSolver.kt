@@ -1,5 +1,7 @@
 import java.util.*
 
+const val SOLUTION_FOUND = "SOLUTION FOUND"
+
 
 class LoopoverSolver(private val startPosition: Loopover) : Solver {
 
@@ -33,25 +35,8 @@ class LoopoverSolver(private val startPosition: Loopover) : Solver {
         }
 
         for (i in 0 until currentPosition.row) {
-            var newMove = currentPosition.moveRowLeft(i)
-            if (movesAlreadyMade.contains(newMove)) {
-                continue
-            }
-            if (newMove == solvedLoopover) {
-                isLoopoverSolved = true
-                return
-            }
-            addMovesToExisting(newMove)
-
-            newMove = currentPosition.moveRowRight(i)
-            if (movesAlreadyMade.contains(newMove)) {
-                continue
-            }
-            if (newMove == solvedLoopover) {
-                isLoopoverSolved = true
-                return
-            }
-            addMovesToExisting(newMove)
+            operateWithNewMove(currentPosition.moveRowLeft(i))
+            operateWithNewMove(currentPosition.moveRowRight(i))
         }
     }
 
@@ -61,27 +46,24 @@ class LoopoverSolver(private val startPosition: Loopover) : Solver {
         }
 
         for (i in 0 until currentPosition.column) {
-            var newMove = currentPosition.moveColumnDown(i)
-            if (movesAlreadyMade.contains(newMove)) {
-                continue
-            }
-            if (newMove == solvedLoopover) {
-                print(newMove)
-                isLoopoverSolved = true
-                return
-            }
-            addMovesToExisting(newMove)
+            operateWithNewMove(currentPosition.moveColumnDown(i))
+            operateWithNewMove(currentPosition.moveColumnUp(i))
 
-            newMove = currentPosition.moveColumnUp(i)
-            if (movesAlreadyMade.contains(newMove)) {
-                continue
-            }
-            if (newMove == solvedLoopover) {
-                print(newMove)
-                isLoopoverSolved = true
-                return
-            }
-            addMovesToExisting(newMove)
+        }
+    }
+
+    private fun operateWithNewMove(move: Loopover) {
+        if (!movesAlreadyMade.contains(move)) {
+            checkIfMoveIsSolution(move)
+            addMovesToExisting(move)
+        }
+    }
+
+    private fun checkIfMoveIsSolution(move: Loopover) {
+        if (move == solvedLoopover) {
+            print(move)
+            isLoopoverSolved = true
+            throw Exception(SOLUTION_FOUND)
         }
     }
 
@@ -89,4 +71,5 @@ class LoopoverSolver(private val startPosition: Loopover) : Solver {
         solvingQueue.add(move)
         movesAlreadyMade += move
     }
+
 }
