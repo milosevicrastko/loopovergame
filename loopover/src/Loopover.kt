@@ -3,7 +3,7 @@ const val INVALID_ROW_INDEX = "Row index for function not valid"
 const val LOOPOVER_ALREADY_SOLVED = "Loopover already solved"
 const val INVALID_LOOPOVER_SETUP = "Invalid loopover setup"
 
-class Loopover(val row: Int, val column: Int, val array: Array<CharArray>, private val parent: Loopover?) {
+class Loopover(val row: Int, val column: Int, val array: Array<CharArray>, val parent: Loopover?) {
 
     fun loopoverFromFile(fileName: String): Loopover {
         val file = FileReader.readFileAsLinesUsingUseLines(fileName)
@@ -59,13 +59,12 @@ class Loopover(val row: Int, val column: Int, val array: Array<CharArray>, priva
             throw Exception(INVALID_COLUMN_INDEX)
         }
         val newArray = copyArray()
-        val temp = newArray[0][columnIndex]
+        val swap = newArray[0][columnIndex]
         for (i in 0 until row - 1) {
             newArray[i][columnIndex] = newArray[i + 1][columnIndex]
         }
-        newArray[row - 1][columnIndex] = temp
-        println("columnUp $columnIndex")
-        return Loopover(row, column, newArray, null)
+        newArray[row - 1][columnIndex] = swap
+        return Loopover(row, column, newArray, this)
     }
 
     fun moveColumnDown(columnIndex: Int): Loopover {
@@ -73,13 +72,12 @@ class Loopover(val row: Int, val column: Int, val array: Array<CharArray>, priva
             throw Exception(INVALID_COLUMN_INDEX)
         }
         val newArray = copyArray()
-        val temp = newArray[row - 1][columnIndex]
+        val swap = newArray[row - 1][columnIndex]
         for (i in row - 1 downTo 1) {
             newArray[i][columnIndex] = newArray[i - 1][columnIndex]
         }
-        newArray[0][columnIndex] = temp
-        println("columnDown $columnIndex")
-        return Loopover(row, column, newArray, null)
+        newArray[0][columnIndex] = swap
+        return Loopover(row, column, newArray, this)
     }
 
     fun moveRowLeft(rowIndex: Int): Loopover {
@@ -87,13 +85,12 @@ class Loopover(val row: Int, val column: Int, val array: Array<CharArray>, priva
             throw Exception(INVALID_ROW_INDEX)
         }
         val newArray = copyArray()
-        val temp = newArray[rowIndex][0]
+        val swap = newArray[rowIndex][0]
         for (i in 0 until column - 1) {
-            newArray[rowIndex][i] = newArray[rowIndex][i+1]
+            newArray[rowIndex][i] = newArray[rowIndex][i + 1]
         }
-        newArray[rowIndex][column - 1] = temp
-        println("rowLeft $rowIndex")
-        return Loopover(row, column, newArray, null)
+        newArray[rowIndex][column - 1] = swap
+        return Loopover(row, column, newArray, this)
 
 
     }
@@ -103,13 +100,12 @@ class Loopover(val row: Int, val column: Int, val array: Array<CharArray>, priva
             throw Exception(INVALID_ROW_INDEX)
         }
         val newArray = copyArray()
-        val temp = newArray[rowIndex][column - 1]
+        val swap = newArray[rowIndex][column - 1]
         for (i in column - 1 downTo 1) {
             newArray[rowIndex][i] = newArray[rowIndex][i - 1]
         }
-        newArray[rowIndex][0] = temp
-        println("rowRight $rowIndex")
-        return Loopover(row, column, newArray, null)
+        newArray[rowIndex][0] = swap
+        return Loopover(row, column, newArray, this)
     }
 
     override fun toString(): String {
