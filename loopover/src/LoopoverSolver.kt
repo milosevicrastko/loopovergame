@@ -5,10 +5,11 @@ const val SOLUTION_FOUND = "SOLUTION FOUND"
 
 class LoopoverSolver(private val startPosition: Loopover) : Solver {
 
-    private var solvingQueue: Queue<Loopover> = LinkedList<Loopover>()
+    private var solvingQueue: Queue<Loopover> = LinkedList()
     private var movesAlreadyMade: Set<Loopover> = mutableSetOf()
     private val solvedLoopover = startPosition.getSolvedLoopover()
     private var isLoopoverSolved: Boolean = false
+    private var solvedTrail: Stack<Loopover> = Stack()
 
     override fun solve() {
 
@@ -61,9 +62,26 @@ class LoopoverSolver(private val startPosition: Loopover) : Solver {
 
     private fun checkIfMoveIsSolution(move: Loopover) {
         if (move == solvedLoopover) {
-            print(move)
+
             isLoopoverSolved = true
+            traceMovesToSolved(move)
+            printSolvedTrail()
+            print(move)
             throw Exception(SOLUTION_FOUND)
+        }
+    }
+
+    private fun traceMovesToSolved(move: Loopover) {
+        var stackMove = move
+        while (stackMove.parent != null) {
+            solvedTrail.push(stackMove)
+            stackMove = stackMove.parent!!
+        }
+    }
+
+    private fun printSolvedTrail() {
+        while (solvedTrail.isNotEmpty()) {
+            println(solvedTrail.pop().originMove)
         }
     }
 
